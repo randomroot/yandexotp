@@ -1,6 +1,6 @@
 @file:Suppress("SpellCheckingInspection")
 
-import ru.mihailpro.lib.yandexotp.Base32
+import ru.mihailpro.lib.yandexotp.utils.Base32
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

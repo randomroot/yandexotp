@@ -1,4 +1,4 @@
-package ru.mihailpro.lib.yandexotp.misc
+package ru.mihailpro.lib.yandexotp
 
 import ru.mihailpro.lib.yandexotp.interfaces.IHOTPGenerator
 import java.nio.ByteBuffer
@@ -7,7 +7,7 @@ import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
 import kotlin.math.pow
 
-class HOTPGenerator {
+internal class HOTPGenerator {
     companion object : IHOTPGenerator {
         @JvmStatic
         override fun <T> code(

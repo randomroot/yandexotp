@@ -1,4 +1,4 @@
-package ru.mihailpro.lib.yandexotp
+package ru.mihailpro.lib.yandexotp.utils
 
 internal object Base32 {
     private const val base32Chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567"
@@ -30,7 +30,7 @@ internal object Base32 {
      * @return Encoded byte array <code>bytes</code> as a String.
      *
      */
-    internal fun encode(bytes: ByteArray, withPadding: Boolean = true): String {
+    fun encode(bytes: ByteArray, withPadding: Boolean = true): String {
         var (length, padding) = getLengthWithPadding(bytes.size, withPadding)
         val base32 = StringBuilder(length)
 
@@ -78,7 +78,7 @@ internal object Base32 {
      * @param base32
      * @return Decoded <code>base32</code> String as a raw byte array.
      */
-    internal fun decode(base32: String): ByteArray {
+    fun decode(base32: String): ByteArray {
         var index = 0
         var lookup: Int
         var offset = 0
