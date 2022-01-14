@@ -1,4 +1,4 @@
-package ru.mihailpro.lib.yandexotp
+package ru.mihailpro.lib.yandexotp.misc
 
 import ru.mihailpro.lib.yandexotp.interfaces.IHOTPGenerator
 import java.nio.ByteBuffer

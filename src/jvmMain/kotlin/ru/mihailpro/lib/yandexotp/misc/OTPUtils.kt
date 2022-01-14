@@ -1,4 +1,4 @@
-package ru.mihailpro.lib.yandexotp
+package ru.mihailpro.lib.yandexotp.misc
 
 object OTPUtils {
     internal fun intFromBigEndian(startIndex: Int, array: ByteArray): Int =

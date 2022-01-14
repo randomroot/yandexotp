@@ -1,4 +1,4 @@
-import ru.mihailpro.lib.yandexotp.OTPUtils
+import ru.mihailpro.lib.yandexotp.misc.OTPUtils
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
