@@ -7,6 +7,30 @@ import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
 import kotlin.math.pow
 
+/*
+    yandexotp, a Kotlin library that generate one-time passwords for Yandex 2FA
+    Copyright (C) 2022 RandomRoot
+
+    This library is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    any later version.
+
+    This library is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this library. If not, see <https://www.gnu.org/licenses/>.
+
+    SPDX-License-Identifier: GPL-3.0-or-later
+*/
+
+/**
+ * Implements HMAC-Based One-Time Password Algorithms based on RFC 4226
+ * Inspired by https://github.com/beemdevelopment/Aegis
+ */
 internal class HOTPGenerator {
     companion object : IHOTPGenerator {
         @JvmStatic

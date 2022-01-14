@@ -1,8 +1,6 @@
 package ru.mihailpro.lib.yandexotp.interfaces
 
-import kotlin.jvm.JvmStatic
-
-interface IHOTPGenerator {
+internal interface IHOTPGenerator {
     fun getHash(secret: ByteArray, algorithm: String, counter: Long): ByteArray
     fun <T> code(
         secret: ByteArray,

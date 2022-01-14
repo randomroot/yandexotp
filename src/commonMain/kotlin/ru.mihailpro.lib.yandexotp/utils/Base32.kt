@@ -1,5 +1,29 @@
 package ru.mihailpro.lib.yandexotp.utils
 
+/*
+    yandexotp, a Kotlin library that generate one-time passwords for Yandex 2FA
+    Copyright (C) 2022 RandomRoot
+
+    This library is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    any later version.
+
+    This library is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this library. If not, see <https://www.gnu.org/licenses/>.
+
+    SPDX-License-Identifier: GPL-3.0-or-later
+ */
+
+/**
+ * Implementation of Base32 encoder based on RFC 4648
+ * https://datatracker.ietf.org/doc/html/rfc4648
+ */
 internal object Base32 {
     private const val base32Chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567"
     private const val paddingChar = '='
@@ -76,7 +100,7 @@ internal object Base32 {
      * Decodes the given Base32 String to a raw byte array.
      *
      * @param base32
-     * @return Decoded <code>base32</code> String as a raw byte array.
+     * @return Decoded Base32 String as a raw byte array.
      */
     fun decode(base32: String): ByteArray {
         var index = 0
