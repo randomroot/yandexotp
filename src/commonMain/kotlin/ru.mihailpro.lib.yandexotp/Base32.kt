@@ -1,16 +1,14 @@
 package ru.mihailpro.lib.yandexotp
 
-import kotlin.experimental.xor
-
 internal object Base32 {
     private const val base32Chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567"
     private const val paddingChar = '='
     private val paddings = arrayOf(0, 1, 3, 4, 6)
-    private const val charsPerGroup = 8;
-    private const val bytesPerGroup = 5;
+    private const val charsPerGroup = 8
+    private const val bytesPerGroup = 5
 
-    private const val bitsPerByte = 8;
-    private const val bitsPerChar = 5;
+    private const val bitsPerByte = 8
+    private const val bitsPerChar = 5
 
     private val base32Lookup = intArrayOf(
         0xFF, 0xFF, 0x1A, 0x1B, 0x1C, 0x1D, 0x1E, 0x1F,  // '0', '1', '2', '3', '4', '5', '6', '7'
@@ -33,17 +31,17 @@ internal object Base32 {
      *
      */
     internal fun encode(bytes: ByteArray, withPadding: Boolean = true): String {
-        var (length, padding) = getLengthWithPadding(bytes.size, withPadding);
+        var (length, padding) = getLengthWithPadding(bytes.size, withPadding)
         val base32 = StringBuilder(length)
 
-        var i = 0;
-        var index = 0;
-        var digit: Int;
-        var currentByte: Int;
+        var i = 0
+        var index = 0
+        var digit: Int
+        var currentByte: Int
         var nextByte: Int
 
         while (i < bytes.size) {
-            currentByte = if (bytes[i] >= 0) bytes[i].toInt() else bytes[i] + 256;
+            currentByte = if (bytes[i] >= 0) bytes[i].toInt() else bytes[i] + 256
 
             /* Is the current digit going to span a byte boundary? */
             if (index > 3) {
@@ -54,7 +52,7 @@ internal object Base32 {
                 }
                 digit = currentByte and (0xFF shr index)
                 index = (index + 5) % 8
-                digit = (digit shl index).xor(nextByte shr (8 - index));
+                digit = (digit shl index).xor(nextByte shr (8 - index))
                 i += 1
             } else {
                 digit = (currentByte shr (8 - (index + 5))) and 0x1F
@@ -73,10 +71,6 @@ internal object Base32 {
 
         return base32.toString()
     }
-
-//    internal fun decode(data: String): ByteArray = decoder(
-//        data.replace('8', 'L').replace('9', 'O')
-//    )
 
     /**
      * Decodes the given Base32 String to a raw byte array.
@@ -104,15 +98,15 @@ internal object Base32 {
         val bytes = ByteArray(outputLength)
 
         for (i in 0..paddingIndex) {
-            lookup = base32[i] - '0';
+            lookup = base32[i] - '0'
             /* Skip chars outside the lookup table */
             if (lookup < 0 || lookup >= base32Lookup.size) {
-                continue;
+                continue
             }
-            digit = base32Lookup[lookup];
+            digit = base32Lookup[lookup]
             /* If this digit is not in the table, ignore it */
             if (digit == 0xFF) {
-                continue;
+                continue
             }
 
             if (index <= 3) {
@@ -120,17 +114,17 @@ internal object Base32 {
                 if (index == 0) {
                     bytes[offset] = bytes[offset].toInt().xor(digit).toByte()
                     offset += 1
-                    if (offset >= bytes.size) break;
+                    if (offset >= bytes.size) break
                 } else {
-                    bytes[offset] = bytes[offset].xor((digit shl (8 - index)).toByte())
+                    bytes[offset] = bytes[offset].toInt().xor((digit shl (8 - index))).toByte()
                 }
             } else {
                 index = (index + 5) % 8
-                bytes[offset] = bytes[offset].xor((digit ushr index).toByte())
+                bytes[offset] = bytes[offset].toInt().xor((digit ushr index)).toByte()
                 offset += 1
 
-                if (offset >= bytes.size) break;
-                bytes[offset] = bytes[offset].xor((digit shl (8 - index)).toByte())
+                if (offset >= bytes.size) break
+                bytes[offset] = bytes[offset].toInt().xor((digit shl (8 - index))).toByte()
             }
         }
 
@@ -138,8 +132,8 @@ internal object Base32 {
     }
 
     private fun getLengthWithPadding(size: Int, withPadding: Boolean): Pair<Int, Int> {
-        val groupsCount = (size + bytesPerGroup - 1) / bytesPerGroup;
-        val lastGroupFakeBytes = groupsCount * bytesPerGroup - size;
+        val groupsCount = (size + bytesPerGroup - 1) / bytesPerGroup
+        val lastGroupFakeBytes = groupsCount * bytesPerGroup - size
         val padding = paddings[lastGroupFakeBytes]
 
         return if (withPadding)
@@ -149,7 +143,7 @@ internal object Base32 {
     }
 
     private fun validatePaddedString(inputLength: Int, outputSize: Int, paddingIndex: Int) {
-        val (_, padding) = getLengthWithPadding(outputSize, true);
+        val (_, padding) = getLengthWithPadding(outputSize, true)
         if (inputLength - padding != paddingIndex)
             throw IllegalArgumentException("Invalid Base32 string padding length")
     }
