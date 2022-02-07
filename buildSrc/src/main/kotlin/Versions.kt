@@ -10,5 +10,5 @@ object Versions {
 object Library {
     const val groupId = "ru.mihailpro.lib"
     const val artifact = "yandexotp"
-    const val version = "1.0-SNAPSHOT"
+    const val version = "1.0"
 }
