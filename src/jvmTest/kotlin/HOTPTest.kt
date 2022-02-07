@@ -1,6 +1,6 @@
 import org.junit.jupiter.api.Test
-import ru.mihailpro.lib.yandexotp.utils.OTPUtils
 import ru.mihailpro.lib.yandexotp.HOTPGenerator
+import ru.mihailpro.lib.yandexotp.utils.OTPUtils
 import kotlin.test.assertEquals
 
 
