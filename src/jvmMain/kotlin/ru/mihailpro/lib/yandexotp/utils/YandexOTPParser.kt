@@ -34,9 +34,7 @@ import java.nio.ByteOrder
     SPDX-License-Identifier: GPL-3.0-or-later
 */
 
-private fun List<String>.getOrEmpty(index: Int): String {
-    return getOrElse(index) { "" }
-}
+private fun List<String>.getOrEmpty(index: Int): String = getOrElse(index) { "" }
 
 private fun String.decodeToUTF8(): String = URLDecoder.decode(this, "UTF-8")
 
@@ -65,18 +63,29 @@ object YandexOTPParser : IYandexOTPParser {
                     containsKey(YA_OTP_QUERY_UID) &&
                     containsKey(YA_OTP_QUERY_PIN_LENGTH)
                 ) {
-                    return YandexSecret(
-                        secret = Base32.decode(getValue(YA_OTP_QUERY_SECRET)),
-                        userId = getValue(YA_OTP_QUERY_UID).toLong(),
-                        userName = getOrDefault(YA_OTP_QUERY_NAME, null),
-                        pinLength = getValue(YA_OTP_QUERY_PIN_LENGTH).toInt()
+                    return parseQRSecret(
+                        getValue(YA_OTP_QUERY_SECRET),
+                        accountName = yandexOtpUri.path,
+                        getOrDefault(YA_OTP_QUERY_NAME, "")
+                    ).update(
+                        userId = getNumberValue(
+                            "userId",
+                            getValue(YA_OTP_QUERY_UID),
+                            YandexOTPErrors.INVALID_OTP_URI_PIN_LENGTH
+                        ),
+                        pinLength = getNumberValue(
+                            "pinLength",
+                            getValue(YA_OTP_QUERY_PIN_LENGTH),
+                            YandexOTPErrors.INVALID_OTP_URI_USER_ID
+                        )
                     )
                 }
             }
         }
 
         throw YandexOTPException(
-            YandexOTPErrors.INVALID_SECRET_URI, "The provided OTP URI is not a valid Yandex 2FA URI"
+            YandexOTPErrors.INVALID_OTP_URI_FORMAT,
+            "The provided OTP URI is not a valid Yandex 2FA URI"
         )
     }
 
@@ -157,5 +166,19 @@ object YandexOTPParser : IYandexOTPParser {
             }
 
         return queryPairs
+    }
+
+    private inline fun <reified T : Number> getNumberValue(
+        name: String, value: String, errorCode: YandexOTPErrors
+    ): T {
+        try {
+            return if (T::class == Int::class) {
+                value.toInt() as T
+            } else {
+                value.toLong() as T
+            }
+        } catch (ex: NumberFormatException) {
+            throw YandexOTPException(errorCode, "Invalid $name value - is not a number")
+        }
     }
 }

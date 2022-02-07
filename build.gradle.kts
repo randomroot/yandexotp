@@ -3,41 +3,28 @@ version = Library.version
 
 plugins {
     kotlin("multiplatform") version Versions.kotlin
+    id("org.jetbrains.kotlinx.kover") version Versions.kover
+    id("io.github.gradle-nexus.publish-plugin") version Versions.nexusPublish
     id("java-library")
     id("publication-conventions")
-    id("io.github.gradle-nexus.publish-plugin") version "1.1.0"
-    jacoco
-
 }
 
 repositories {
     mavenCentral()
 }
 
-jacoco {
-    toolVersion = "0.8.7"
+tasks.test {
+    extensions.configure(kotlinx.kover.api.KoverTaskExtension::class) {
+        isDisabled = false
+        includes = listOf("${Library.groupId}.${Library.artifact}.*")
+        excludes = listOf("${Library.groupId}.${Library.artifact}.test.*")
+    }
 }
 
-tasks.jacocoTestReport {
-    val coverageSourceDirs = arrayOf(
-        "src/commonMain",
-        "src/jvmMain"
-    )
+kover {
+    coverageEngine.set(kotlinx.kover.api.CoverageEngine.JACOCO)
+    jacocoEngineVersion.set("0.8.7")
 
-    val classFiles = File("${buildDir}/classes/kotlin/jvm/")
-        .walkBottomUp()
-        .toSet()
-
-    classDirectories.setFrom(classFiles)
-    sourceDirectories.setFrom(files(coverageSourceDirs))
-
-    executionData
-        .setFrom(files("${buildDir}/jacoco/jvmTest.exec"))
-
-    reports {
-        xml.isEnabled = true
-        html.isEnabled = true
-    }
 }
 
 kotlin {

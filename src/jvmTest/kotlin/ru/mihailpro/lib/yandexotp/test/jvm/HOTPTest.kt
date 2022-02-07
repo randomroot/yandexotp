@@ -1,3 +1,5 @@
+package ru.mihailpro.lib.yandexotp.test.jvm
+
 import org.junit.jupiter.api.Test
 import ru.mihailpro.lib.yandexotp.HOTPGenerator
 import ru.mihailpro.lib.yandexotp.utils.OTPUtils
@@ -34,5 +36,15 @@ class HOTPTest {
                 )
             )
         }
+    }
+
+    @Test
+    fun zeroDigits() {
+        assertEquals("0", HOTPGenerator.getText(10, 0))
+    }
+
+    @Test
+    fun twoManyDigits() {
+        assertEquals("0000000010", HOTPGenerator.getText(10, 10))
     }
 }

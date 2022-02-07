@@ -1,3 +1,5 @@
+package ru.mihailpro.lib.yandexotp.test.common
+
 import ru.mihailpro.lib.yandexotp.utils.OTPUtils
 import kotlin.test.Test
 import kotlin.test.assertEquals

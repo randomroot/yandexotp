@@ -65,12 +65,12 @@ internal object Base32 {
         var nextByte: Int
 
         while (i < bytes.size) {
-            currentByte = if (bytes[i] >= 0) bytes[i].toInt() else bytes[i] + 256
+            currentByte = bytes[i].toInt()
 
             /* Is the current digit going to span a byte boundary? */
             if (index > 3) {
                 nextByte = if ((i + 1) < bytes.size) {
-                    if (bytes[i + 1] >= 0) bytes[i + 1].toInt() else bytes[i + 1] + 256
+                    bytes[i + 1].toInt()
                 } else {
                     0
                 }
@@ -109,7 +109,7 @@ internal object Base32 {
         var digit: Int
 
         var paddingIndex = base32.length
-        while (base32[paddingIndex - 1] == paddingChar) paddingIndex -= 1
+        while (paddingIndex > 0 && base32[paddingIndex - 1] == paddingChar) paddingIndex -= 1
         val outputLength = paddingIndex * bitsPerChar / bitsPerByte
         if (outputLength == 0) throw IllegalArgumentException("Base32 string is too short")
 

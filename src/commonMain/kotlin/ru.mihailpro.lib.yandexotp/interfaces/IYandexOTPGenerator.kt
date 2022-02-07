@@ -32,20 +32,41 @@ interface IYandexOTPGenerator {
     /**
      * Generates OTP code based on current time
      *
-     * @param secretHash text (secret) from QR code or Yandex website
+     * @param secretString text (secret) from QR code or Yandex website
      * @param pin user-selected PIN code
      * @return 8-character text code
      */
-    fun getCode(secretHash: String, pin: String): String
+    fun getCode(secretString: String, pin: String): String
 
     /**
      * Generates OTP code based on selected time
      *
-     * @param secretHash text (secret) from QR code or Yandex website
+     * @param secretString text (secret) from QR code or Yandex website
      * @param pin user-selected PIN code
      * @param timestampInSeconds selected date and time in unix seconds
      *
      * @return 8-character text code
      */
-    fun getCode(secretHash: String, pin: String, timestampInSeconds: Long): String
+    fun getCode(secretString: String, pin: String, timestampInSeconds: Long): String
+
+    /**
+     * Generates OTP code based on selected time
+     *
+     * @param secretBytes secret in Base32 bytes from QR code or Yandex website
+     * @param pin user-selected PIN code
+     *
+     * @return 8-character text code
+     */
+    fun getCode(secretBytes: ByteArray, pin: String): String
+
+    /**
+     * Generates OTP code based on selected time
+     *
+     * @param secretBytes text (secret) from QR code or Yandex website
+     * @param pin user-selected PIN code
+     * @param timestampInSeconds selected date and time in unix seconds
+     *
+     * @return 8-character text code
+     */
+    fun getCode(secretBytes: ByteArray, pin: String, timestampInSeconds: Long): String
 }

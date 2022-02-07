@@ -1,8 +1,11 @@
 @file:Suppress("SpellCheckingInspection")
 
+package ru.mihailpro.lib.yandexotp.test.common
+
 import ru.mihailpro.lib.yandexotp.utils.Base32
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 
 class Base32Test {
     data class Vector(val original: String, val base32: String)
@@ -18,6 +21,8 @@ class Base32Test {
         Vector("foobar", "MZXW6YTBOI======")
     )
 
+    private val exoticVectors = arrayOf("猫МЯУ6===", "//!!!===")
+
     @Test
     fun testEncode() {
         vectors.forEach { checkEncodeToString(it) }
@@ -26,6 +31,31 @@ class Base32Test {
     @Test
     fun testDecode() {
         vectors.forEach { checkDecodeToString(it) }
+    }
+
+    @Test
+    fun testEncodeWithoutPadding() {
+        assertEquals(
+            "MZXW6", Base32.encode(
+                vectors[1].original.asciiToByteArray(), withPadding =
+                false
+            )
+        )
+    }
+
+    @Test
+    fun testDecodeEmpty() {
+        assertFailsWith(IllegalArgumentException::class) { Base32.decode("=========") }
+    }
+
+    @Test
+    fun testExoticStrings() {
+        exoticVectors.forEach(Base32::decode)
+    }
+
+    @Test
+    fun testInvalidPadding() {
+        assertFailsWith(IllegalArgumentException::class) { Base32.decode("MZXW6==") }
     }
 
     private fun checkEncodeToString(vector: Vector) {

@@ -9,7 +9,7 @@ class YandexOTPException(
     /**
      * Code for external exception handlers
      */
-    errorCode: YandexOTPErrors,
+    val errorCode: YandexOTPErrors,
     /**
      * The detail message
      */

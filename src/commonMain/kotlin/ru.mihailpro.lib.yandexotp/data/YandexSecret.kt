@@ -3,13 +3,24 @@ package ru.mihailpro.lib.yandexotp.data
 /**
  * Stores parsed Yandex OTP secret
  */
-data class YandexSecret(
+class YandexSecret(
     val secret: ByteArray,
-    val userId: Long,
+    userId: Long,
     val accountName: String? = null,
     val userName: String? = null,
-    val pinLength: Int,
+    pinLength: Int,
 ) {
+    var userId: Long = userId
+        private set
+    var pinLength: Int = pinLength
+        private set
+
+    internal fun update(userId: Long, pinLength: Int): YandexSecret {
+        this.userId = userId
+        this.pinLength = pinLength
+        return this
+    }
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other == null || this::class != other::class) return false

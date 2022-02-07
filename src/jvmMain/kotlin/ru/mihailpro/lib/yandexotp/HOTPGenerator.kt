@@ -31,40 +31,34 @@ import kotlin.math.pow
  * Implements HMAC-Based One-Time Password Algorithms based on RFC 4226
  * Inspired by https://github.com/beemdevelopment/Aegis
  */
-internal class HOTPGenerator {
-    companion object : IHOTPGenerator {
-        @JvmStatic
-        override fun <T> code(
-            secret: ByteArray,
-            algorithm: String,
-            counter: Long,
-            converter: (startIndex: Int, array: ByteArray) -> T
-        ): T {
-            val hash = getHash(secret, algorithm, counter)
-            val offset = hash[hash.size - 1].toInt() and 0xf
-            return converter(offset, hash)
+internal object HOTPGenerator : IHOTPGenerator {
+    override fun <T> code(
+        secret: ByteArray,
+        algorithm: String,
+        counter: Long,
+        converter: (startIndex: Int, array: ByteArray) -> T
+    ): T {
+        val hash = getHash(secret, algorithm, counter)
+        val offset = hash[hash.size - 1].toInt() and 0xf
+        return converter(offset, hash)
+    }
+
+    override fun getHash(secret: ByteArray, algorithm: String, counter: Long): ByteArray {
+        val key = SecretKeySpec(secret, "RAW")
+        val counterBytes =
+            ByteBuffer.allocate(8).order(ByteOrder.BIG_ENDIAN).putLong(counter).array()
+        val mac = Mac.getInstance(algorithm)
+        mac.init(key)
+        return mac.doFinal(counterBytes)
+    }
+
+    override fun getText(otp: Long, digits: Int): String {
+        val code = otp % 10.0.pow(digits).toInt()
+        val res = StringBuilder(code.toString())
+        while (res.length < digits) {
+            res.insert(0, "0")
         }
 
-        @JvmStatic
-        override fun getHash(secret: ByteArray, algorithm: String, counter: Long): ByteArray {
-            val key = SecretKeySpec(secret, "RAW")
-            val counterBytes =
-                ByteBuffer.allocate(8).order(ByteOrder.BIG_ENDIAN).putLong(counter).array()
-            val mac = Mac.getInstance(algorithm)
-            mac.init(key)
-            return mac.doFinal(counterBytes)
-        }
-
-        @JvmStatic
-        override fun getText(otp: Long, digits: Int): String {
-            val code = otp % 10.0.pow(digits).toInt()
-            val res = StringBuilder(code.toString())
-            digits.javaClass
-            while (res.length < digits) {
-                res.insert(0, "0")
-            }
-
-            return res.toString()
-        }
+        return res.toString()
     }
 }

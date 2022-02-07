@@ -45,7 +45,17 @@ enum class YandexOTPErrors {
     /**
      * Indicates that provided Yandex secret URI does not meet the specification
      */
-    INVALID_SECRET_URI,
+    INVALID_OTP_URI_FORMAT,
+
+    /**
+     * Indicates that pinLength param in OTP url is invalid
+     */
+    INVALID_OTP_URI_PIN_LENGTH,
+
+    /**
+     * Indicates that userId param in OTP url is invalid
+     */
+    INVALID_OTP_URI_USER_ID,
 
     /**
      * Indicates that provided Yandex secret length doesn't comply with specification
@@ -58,9 +68,10 @@ enum class YandexOTPErrors {
     INVALID_SECRET_CHECKSUM,
 
     /**
-     * Indicates that PIN passed to method
+     * Indicates that PIN passed to method has
      */
     INVALID_PIN_LENGTH,
+
 
     /**
      * Indicates that PIN length passed to a method differs from expected

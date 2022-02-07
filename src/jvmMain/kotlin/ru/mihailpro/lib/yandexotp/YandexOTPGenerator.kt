@@ -1,5 +1,6 @@
 package ru.mihailpro.lib.yandexotp
 
+import ru.mihailpro.lib.yandexotp.data.SECRET_BYTES_LENGTH
 import ru.mihailpro.lib.yandexotp.data.YA_CRYPTO_HASH_ALGORITHM
 import ru.mihailpro.lib.yandexotp.data.YA_HASH_ALGORITHM
 import ru.mihailpro.lib.yandexotp.data.YA_OTP_LENGTH
@@ -54,16 +55,29 @@ object YandexOTPGenerator : IYandexOTPGenerator {
         return getCode(yaSecret.secret, pin, timestampInSeconds)
     }
 
-    override fun getCode(secretHash: String, pin: String): String =
-        getCode(secretHash, pin, System.currentTimeMillis() / 1000)
+    override fun getCode(secretString: String, pin: String): String =
+        getCode(secretString, pin, System.currentTimeMillis() / 1000)
 
-    override fun getCode(secretHash: String, pin: String, timestampInSeconds: Long): String =
-        getCode(Base32.decode(secretHash), pin, timestampInSeconds)
+    override fun getCode(secretString: String, pin: String, timestampInSeconds: Long): String =
+        getCode(Base32.decode(secretString), pin, timestampInSeconds)
 
-    private fun getCode(secret: ByteArray, pin: String, timestampInSeconds: Long): String =
-        getCode(secret, pin.toByteArray(), timestampInSeconds)
+    override fun getCode(secretBytes: ByteArray, pin: String): String =
+        getCode(secretBytes, pin, System.currentTimeMillis() / 1000)
 
-    private fun getCode(secret: ByteArray, pin: ByteArray, timestampInSeconds: Long): String {
+    override fun getCode(secretBytes: ByteArray, pin: String, timestampInSeconds: Long): String =
+        getCode(secretBytes, pin.toByteArray(), timestampInSeconds)
+
+    private fun getCode(secretBytes: ByteArray, pin: ByteArray, timestampInSeconds: Long): String {
+        if (secretBytes.size < SECRET_BYTES_LENGTH) {
+            throw YandexOTPException(YandexOTPErrors.INVALID_SECRET_LENGTH, "Wrong secret size")
+        }
+
+        val secret = if (secretBytes.size > SECRET_BYTES_LENGTH) {
+            secretBytes.copyOfRange(0, SECRET_BYTES_LENGTH)
+        } else {
+            secretBytes
+        }
+
         val counter = floor(timestampInSeconds.toDouble() / YA_OTP_TIME_PERIOD_SECONDS).toLong()
         var keyHash = MessageDigest.getInstance(YA_HASH_ALGORITHM).digest(pin + secret)
 
