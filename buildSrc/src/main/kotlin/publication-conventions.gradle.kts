@@ -1,6 +1,8 @@
 import org.jetbrains.dokka.gradle.DokkaTask
 import java.util.*
 
+version = Library.version
+
 plugins {
     `maven-publish`
     signing
@@ -12,6 +14,8 @@ extra.apply {
     set("signing.keyId", null)
     set("signing.password", null)
     set("signing.secretKeyRingFile", null)
+    set("signing.key", null)
+    set("stagingProfileId", null)
     set("ossrhUsername", null)
     set("ossrhPassword", null)
 }
@@ -30,6 +34,8 @@ if (secretPropsFile.exists()) {
     extra.apply {
         set("signing.keyId", System.getenv("SIGNING_KEY_ID"))
         set("signing.password", System.getenv("SIGNING_PASSWORD"))
+        set("signing.key", System.getenv("SIGNING_KEY"))
+        set("stagingProfileId", System.getenv("SONATYPE_STAGING_PROFILE_ID"))
         set("signing.secretKeyRingFile", System.getenv("SIGNING_SECRET_KEY_RING_FILE"))
         set("ossrhUsername", System.getenv("OSSRH_USERNAME"))
         set("ossrhPassword", System.getenv("OSSRH_PASSWORD"))

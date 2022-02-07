@@ -1,4 +1,9 @@
 # yandexotp
+![badge](https://img.shields.io/badge/kotlin-1.5.32-blue)
+![badge][badge-jvm]
+[![Build](https://github.com/RandomRoot/yandexotp/actions/workflows/build.yml/badge.svg)](https://github.com/RandomRoot/yandexotp/actions/workflows/build.yml)
+[![codecov](https://codecov.io/gh/RandomRoot/yandexotp/branch/main/graph/badge.svg?token=ODV97JG018)](https://codecov.io/gh/RandomRoot/yandexotp)
+
 
 Just a Kotlin library that validates secrets and generates one-time passwords for **Yandex**
 two-factor authentication.
@@ -103,3 +108,5 @@ val yandexSecret = YandexOTPParser.parseQRUri(uri)
 
 This project is licensed under the GNU General Public License v3.0. See the [LICENSE](LICENSE) file
 for details.
+
+[badge-jvm]: http://img.shields.io/badge/platform-jvm-DB413D.svg?style=flat
