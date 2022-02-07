@@ -1,7 +1,7 @@
 # yandexotp
 ![badge](https://img.shields.io/badge/kotlin-1.5.32-blue)
 ![badge][badge-jvm]
-[![Build](https://github.com/RandomRoot/yandexotp/actions/workflows/build.yml/badge.svg)](https://github.com/RandomRoot/yandexotp/actions/workflows/build.yml)
+[![Build](https://github.com/RandomRoot/yandexotp/actions/workflows/buildMain.yml/badge.svg)](https://github.com/RandomRoot/yandexotp/actions/workflows/buildMain.yml)
 [![codecov](https://codecov.io/gh/RandomRoot/yandexotp/branch/main/graph/badge.svg?token=ODV97JG018)](https://codecov.io/gh/RandomRoot/yandexotp)
 
 
