@@ -1,8 +1,10 @@
 name: Publish
 
 on:
-  release:
-    types: [released]
+  workflow_dispatch: { }
+  push:
+    tags:
+      - '*'
 
 jobs:
   publish:
@@ -17,16 +19,28 @@ jobs:
         with:
           distribution: adopt
           java-version: 11
+          cache: gradle
 
       - name: Make gradle executable
         run: chmod +x ./gradlew
 
+      - name: Configure GPG Key
+        run: |
+          echo '${{secrets.GPG_KEY_CONTENTS}}' | base64 -d > publish_key.gpg
+          gpg --quiet --batch --yes --decrypt --passphrase="${{secrets.SECRET_PASSPHRASE}}" --output secret.gpg publish_key.gpg
+
       - name: Publish to MavenCentral
-        run: ./gradlew publishToSonatype --max-workers 1 closeAndReleaseSonatypeStagingRepository
+        id: central
+        run: ./gradlew test publish --no-daemon --no-parallel -Psigning.secretKeyRingFile=secret.gpg -Psigning.keyId=${{secrets.SIGNING_KEY_ID}} -Psigning.password=${{secrets.SIGNING_PASSWORD}}
         env:
           OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
-          SIGNING_KEY_ID: ${{ secrets.SIGNING_KEY_ID }}
-          SIGNING_PASSWORD: ${{ secrets.SIGNING_PASSWORD }}
-          SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
           SONATYPE_STAGING_PROFILE_ID: ${{ secrets.SONATYPE_STAGING_PROFILE_ID }}
+
+      - name: Create release
+        if: steps.central.outcome == 'success'
+        uses: ncipollo/release-action@v1
+        with:
+          allowUpdates: true
+          artifacts: "${{ github.workspace }}/build/libs/*.jar"
+          token: ${{ secrets.GITHUB_TOKEN }}
