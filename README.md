@@ -1,7 +1,7 @@
 # yandexotp
 [![license](https://img.shields.io:/github/license/RandomRoot/yandexotp)](LICENSE)
 [![Kotlin](https://img.shields.io/badge/kotlin-1.5.32-blue.svg?logo=kotlin)](http://kotlinlang.org)
-[![Maven Central](https://img.shields.io/maven-central/v/ru.mihailpro.lib/yandexotp)](https://mvnrepository.com/artifact/io.ktor)
+[![Maven Central](https://img.shields.io/maven-central/v/ru.mihailpro.lib/yandexotp)](https://mvnrepository.com/artifact/ru.mihailpro.lib/yandexotp)
 ![badge][badge-jvm]
 [![Build](https://github.com/RandomRoot/yandexotp/actions/workflows/buildMain.yml/badge.svg)](https://github.com/RandomRoot/yandexotp/actions/workflows/buildMain.yml)
 [![codecov](https://codecov.io/gh/RandomRoot/yandexotp/branch/main/graph/badge.svg?token=ODV97JG018)](https://codecov.io/gh/RandomRoot/yandexotp)
